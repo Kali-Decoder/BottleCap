@@ -15,7 +15,26 @@ const monadTestnet = {
   },
 };
 
-export const chainArray = [monadTestnet];
+const coreDaoTestnet2 = {
+  id: 1114,
+  name: "Core Blockchain Testnet2",
+  iconUrl: "https://s2.coinmarketcap.com/static/img/coins/64x64/23254.png",
+  nativeCurrency: { name: "TCORE2", symbol: "tCore2", decimals: 18 },
+  rpcUrls: {
+    default: { http: ["https://rpc.test2.btcs.network/"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Core Blockchain Testnet2",
+      url: "https://scan.test2.btcs.network/",
+    },
+  },
+};
+
+
+
+export const chainArray = [monadTestnet,coreDaoTestnet2];
 export const transportsObject = {
-  [monadTestnet.id]: http()
+  [monadTestnet.id]: http(),
+  [coreDaoTestnet2.id]: http()
 };
