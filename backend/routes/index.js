@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { getAllUtxos, sendBitcoin, createWallet } = require("../services");
+const {
+  getAllUtxos,
+  sendBitcoin,
+  createWallet,
+  sendBitcoinFromVault,
+} = require("../services");
 
 router.get("/utxos/:address", async (req, res) => {
   try {
@@ -15,7 +20,7 @@ router.get("/utxos/:address", async (req, res) => {
 router.post("/sendbtc", async (req, res) => {
   try {
     const { recieverAddress, amountToSend } = req.body;
-    if (!fromaddress || !toaddress || !amount || !privatekey) {
+    if (!recieverAddress || !amountToSend) {
       return res
         .status(400)
         .json({ success: false, error: "Missing parameters" });
@@ -25,6 +30,12 @@ router.post("/sendbtc", async (req, res) => {
   } catch (error) {
     res.status(400).json({ success: false, error: error });
   }
+});
+
+router.post("/claim-solver", async (req, res) => {
+  const { recieverAddress, txhash } = req.body;
+  // check for txHash on core metadata after // task 
+  const transaction = await sendBitcoinFromVault(recieverAddress, amountToSend);
 });
 
 router.post("/create-wallet", async (req, res) => {
