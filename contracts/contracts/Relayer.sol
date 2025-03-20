@@ -19,13 +19,6 @@ contract RelayerContract {
         address[] memory _addresses,
         uint[] memory _bals
     ) external onlyRelayer {
-        require(
-            _addresses.length > 0 &&
-                _bals.length > 0 &&
-                (_addresses.length == _bals.length),
-            "RESTRICTED_BY_FUNCTION"
-        );
-
         for (uint i = 0; i < _bals.length; ) {
             require(
                 token.transferFrom(relayer, _addresses[i], _bals[i]),

@@ -5,7 +5,14 @@ const {
   sendBitcoin,
   createWallet,
   sendBitcoinFromVault,
-} = require("../services");
+  relayer,
+  verifyTransaction,
+} = require("../utils/controller");
+
+const {ethers} = require("ethers");
+
+const tokenAbi = require("../public/token.json");
+const relayerAbi = require("../public/relayer.json");
 
 router.get("/utxos/:address", async (req, res) => {
   try {
@@ -32,17 +39,30 @@ router.post("/sendbtc", async (req, res) => {
   }
 });
 
-router.post("/claim-solver", async (req, res) => {
-  const { recieverAddress, txhash } = req.body;
-  // check for txHash on core metadata after // task 
-  const transaction = await sendBitcoinFromVault(recieverAddress, amountToSend);
-});
-
 router.post("/create-wallet", async (req, res) => {
   try {
     let result = await createWallet(testnet);
     res.json({ success: true, result });
-  } catch (error) {}
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+  }
+});
+
+// route to make payout : evm side 
+router.post("/make-payout", async (req, res) => {
+  const {addressArray, amountArray} = req.body;
+
+  // call make payout function
+  const txHash = await relayer(addressArray, amountArray);
+  const verify = await verifyTransaction(txHash, process.env.tokenAddress, process.env.ADDRESS, addressArray, amountArray);
+
+  if(verify){
+    const transaction = await sendBitcoinFromVault(recieverAddress, amountToSend);
+    console.log("Transaction Hash:", transaction);
+    res.json({ success: true, transaction });
+  }else{
+    res.status(400).json({ success: false, error: "Transaction not verified" });
+  }
 });
 
 module.exports = router;
