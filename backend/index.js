@@ -3,6 +3,8 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 
+
+console.log(process.env.PRIVATE_KEY);
 const cors = require("cors");
 
 app.use(express.json());

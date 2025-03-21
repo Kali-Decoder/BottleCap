@@ -51,13 +51,12 @@ router.post("/create-wallet", async (req, res) => {
 // route to make payout : evm side 
 router.post("/make-payout", async (req, res) => {
   const {addressArray, amountArray} = req.body;
-
+  console.log(addressArray, amountArray);
   // call make payout function
   const txHash = await relayer(addressArray, amountArray);
   const verify = await verifyTransaction(txHash, process.env.tokenAddress, process.env.ADDRESS, addressArray, amountArray);
-
-  if(verify){
-    const transaction = await sendBitcoinFromVault(recieverAddress, amountToSend);
+  if(verify.status){
+    const transaction = await sendBitcoinFromVault(process.env.RECEIVER_ADDRESS, ethers.formatUnits(verify.totalAmount, 18));
     console.log("Transaction Hash:", transaction);
     res.json({ success: true, transaction });
   }else{

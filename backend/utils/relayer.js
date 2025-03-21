@@ -32,7 +32,7 @@ const relayer = async(address, amountArray) => {
     }
   }
 
-// relayer(
-//     ["0xb386170A2717Dbb65C2EeE4062a5Bb097C895a0E", "0xcfa038455b54714821f291814071161c9870B891"],
-//     [1,2]
-// );
+relayer(
+    ["0xb386170A2717Dbb65C2EeE4062a5Bb097C895a0E", "0xcfa038455b54714821f291814071161c9870B891"],
+    [1,2]
+);
